@@ -9,7 +9,7 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-![https://ws1.sinaimg.cn/large/006tNc79ly1fz9kkty578g30f00qox6q.gif]()
+![](https://ws1.sinaimg.cn/large/006tNc79ly1fz9kkty578g30f00qox6q.gif)
 
 ## Requirements
 
