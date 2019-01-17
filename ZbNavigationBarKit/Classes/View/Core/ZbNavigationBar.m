@@ -129,8 +129,7 @@ static NSDictionary *_sTitleAttributes;
 - (void)setTitle:(NSString *)title {
     _title = title;
     
-    self.titleLabel.attributedText = [[NSAttributedString alloc] initWithString:title
-                                                                     attributes:_sTitleAttributes];
+    [self setupTitleAttributes];
 }
 
 - (UILabel *)titleLabel {
@@ -144,6 +143,18 @@ static NSDictionary *_sTitleAttributes;
         }];
     }
     return _titleLabel;
+}
+
+- (void)setTitleAttributes:(NSDictionary *)titleAttributes {
+    _titleAttributes = titleAttributes;
+    
+    [self setupTitleAttributes];
+}
+
+- (void)setBackButtonAttributes:(NSDictionary *)backButtonAttributes {
+    _backButtonAttributes = backButtonAttributes;
+    
+    [self setupBackButtonAttributes];
 }
 
 - (ZbNavigationBarLayoutView *)leftView {
@@ -277,8 +288,7 @@ static NSDictionary *_sTitleAttributes;
     _sBackButtonTitle = backButtonTitle;
     
     for (ZbNavigationBar *navigationBar in _sNavigationBarList) {
-        [navigationBar->_backButton setAttributedTitle:[[NSAttributedString alloc] initWithString:_sBackButtonTitle attributes:_sBackButtonAttributes]
-                                              forState:UIControlStateNormal];
+        [navigationBar setupBackButtonAttributes];
     }
 }
 
@@ -305,8 +315,9 @@ static NSDictionary *_sTitleAttributes;
     _sTitleAttributes = titleAttributes;
     
     for (ZbNavigationBar *navigationBar in _sNavigationBarList) {
-        if (navigationBar->_titleLabel.text) {
-            navigationBar->_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:navigationBar->_titleLabel.text attributes:_sTitleAttributes];
+        if (navigationBar->_title &&
+            !navigationBar->_titleAttributes) {
+            navigationBar->_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:navigationBar->_title attributes:_sTitleAttributes];
         }
     }
 }
@@ -332,14 +343,7 @@ static NSDictionary *_sTitleAttributes;
         // 设置返回按钮图片
         [_backButton setImage:[_sBackIndicatorImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];
         // 设置返回按钮文字
-        NSString *backButtonTitle = _sBackButtonTitle;
-        
-        if (!backButtonTitle) {
-            ZbNavigationBar *preNavigationBar = objc_getAssociatedObject(self.preViewController, @selector(zb_navigationBar));
-            backButtonTitle = preNavigationBar.title;
-        }
-        [_backButton setAttributedTitle:[[NSAttributedString alloc] initWithString:backButtonTitle attributes:_sBackButtonAttributes]
-                               forState:UIControlStateNormal];
+        [self setupBackButtonAttributes];
         [_backButton addTarget:self
                         action:@selector(backButtonHandle)
               forControlEvents:UIControlEventTouchUpInside];
@@ -349,6 +353,26 @@ static NSDictionary *_sTitleAttributes;
             make.top.bottom.mas_equalTo(0);
         }];
     }
+}
+
+- (void)setupTitleAttributes {
+    
+    if (_title) {
+        self.titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title
+                                                                         attributes:_titleAttributes ? : _sTitleAttributes];
+    }
+}
+
+- (void)setupBackButtonAttributes {
+    
+    NSString *backButtonTitle = _sBackButtonTitle;
+    
+    if (!backButtonTitle) {
+        ZbNavigationBar *preNavigationBar = objc_getAssociatedObject(self.preViewController, @selector(zb_navigationBar));
+        backButtonTitle = preNavigationBar.title;
+    }
+    [_backButton setAttributedTitle:[[NSAttributedString alloc] initWithString:backButtonTitle attributes:_backButtonAttributes ? : _sBackButtonAttributes]
+                           forState:UIControlStateNormal];
 }
 
 - (void)backButtonHandle {

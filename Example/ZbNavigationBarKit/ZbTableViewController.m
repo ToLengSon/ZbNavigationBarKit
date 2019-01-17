@@ -79,13 +79,13 @@
     self.data = @[@{
                       @"title" : @"Demo演示",
                       @"vcName" : @"ZbDemoViewController"
-                      }];
+                      },];
     
 }
 
 #pragma mark - Table view data source
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.data.count;
+    return 100;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -96,13 +96,26 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:cellId];
     }
-    cell.textLabel.text = self.data[indexPath.row][@"title"];
+    cell.textLabel.text = self.data[0][@"title"];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.navigationController pushViewController:[[NSClassFromString(self.data[indexPath.row][@"vcName"]) alloc] init] animated:YES];
+    [self.navigationController pushViewController:[[NSClassFromString(self.data[0][@"vcName"]) alloc] init] animated:YES];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat rate = scrollView.contentOffset.y / 64;
+    
+    if (rate < -1) {
+        rate = 1;
+    } else if (rate >= 0) {
+        rate = 0;
+    } else {
+        rate = -rate;
+    }
+    self.zb_navigationBar.alpha = rate;
 }
 
 @end

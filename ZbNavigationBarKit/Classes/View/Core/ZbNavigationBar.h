@@ -63,6 +63,10 @@
 @property (nonatomic, assign) CGPoint startPoint;
 /** 渐变色结束点 */
 @property (nonatomic, assign) CGPoint endPoint;
+/** 设置返回按钮样式 */
+@property (nonatomic, strong) NSDictionary *backButtonAttributes;
+/** 设置文字样式 */
+@property (nonatomic, strong) NSDictionary *titleAttributes;
 
 #pragma mark - 导航栏内容设置
 /** 标题文字 */

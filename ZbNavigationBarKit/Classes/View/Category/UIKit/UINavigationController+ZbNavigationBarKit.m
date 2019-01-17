@@ -111,29 +111,41 @@
         UINavigationController *navigationController = objc_getAssociatedObject(gestureRecognizer, @selector(zb_overrideViewDidLoad));
         
         navigationController.zb_currentNavigationBarView = objc_getAssociatedObject(navigationController.topViewController, @selector(zb_navigationBar));
+        
+        if (!navigationController.zb_currentNavigationBarView ||
+            navigationController.zb_currentNavigationBarView.isHidden ||
+            navigationController.zb_currentNavigationBarView.alpha == 0) {
+            [self zb_handleNavigationTransition:gestureRecognizer];
+            return;
+        }
+        
         navigationController.zb_currentNavigationBarSnapView = [navigationController.zb_currentNavigationBarView snapshotViewAfterScreenUpdates:NO];
         
         [self zb_handleNavigationTransition:gestureRecognizer];
         
         navigationController.zb_preNavigationBarView = objc_getAssociatedObject(navigationController.topViewController, @selector(zb_navigationBar));
-        navigationController.zb_preNavigationBarSnapView = [navigationController.zb_preNavigationBarView zb_snap];
-  
-        // 两个页面同时拥有导航栏时过渡
-        if (navigationController.zb_currentNavigationBarSnapView &&
-            navigationController.zb_preNavigationBarSnapView) {
-            
-            [navigationController.zb_transitionContainerView addSubview:navigationController.zb_preNavigationBarSnapView];
-            navigationController.zb_preNavigationBarView.hidden = YES;
-            [navigationController.zb_preNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.edges.mas_equalTo(0);
-            }];
-            
-            [navigationController.zb_transitionContainerView addSubview:navigationController.zb_currentNavigationBarSnapView];
-            navigationController.zb_currentNavigationBarView.hidden = YES;
-            [navigationController.zb_currentNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.edges.mas_equalTo(0);
-            }];
+        
+        if (!navigationController.zb_preNavigationBarView ||
+            navigationController.zb_preNavigationBarView.isHidden ||
+            navigationController.zb_preNavigationBarView.alpha == 0) {
+            [self zb_handleNavigationTransition:gestureRecognizer];
+            return;
         }
+        
+        navigationController.zb_preNavigationBarSnapView = [navigationController.zb_preNavigationBarView zb_snap];
+        
+        // 满足过渡条件
+        [navigationController.zb_transitionContainerView addSubview:navigationController.zb_preNavigationBarSnapView];
+        navigationController.zb_preNavigationBarView.hidden = YES;
+        [navigationController.zb_preNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(0);
+        }];
+        
+        [navigationController.zb_transitionContainerView addSubview:navigationController.zb_currentNavigationBarSnapView];
+        navigationController.zb_currentNavigationBarView.hidden = YES;
+        [navigationController.zb_currentNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(0);
+        }];
     } else {
         [self zb_handleNavigationTransition:gestureRecognizer];
     }
@@ -141,7 +153,7 @@
 
 - (void)zb_updateInteractiveTransition:(CGFloat)percentComplete {
     [self zb_updateInteractiveTransition:percentComplete];
-    
+
     self.zb_preNavigationBarSnapView.alpha = percentComplete;
     self.zb_currentNavigationBarSnapView.alpha = 1 - percentComplete;
 }

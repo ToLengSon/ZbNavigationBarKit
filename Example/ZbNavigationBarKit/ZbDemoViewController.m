@@ -10,6 +10,7 @@
 #import "ZbNavigationBarKit.h"
 
 @interface ZbDemoViewController ()
+<ZbNavigationBarDelegate>
 
 @end
 
@@ -17,6 +18,10 @@
 
 + (void)load {
     ZbNavigationBar.backIndicatorImage = [UIImage imageNamed:@"zjnews_news_nav_back_default_button"];
+    ZbNavigationBar.backButtonAttributes = @{
+                                             NSForegroundColorAttributeName : [UIColor greenColor],
+                                             NSFontAttributeName : [UIFont systemFontOfSize:14]
+                                             };
 }
 
 - (void)viewDidLoad {
@@ -28,6 +33,19 @@
     self.zb_navigationBar.backgroundColors = @[[UIColor yellowColor], [UIColor purpleColor]];
     self.zb_navigationBar.startPoint = CGPointMake(0, 0.5);
     self.zb_navigationBar.endPoint = CGPointMake(1, 0.5);
+    self.zb_navigationBar.delegate = self;
+    self.zb_navigationBar.titleAttributes = @{
+                                              NSForegroundColorAttributeName : [UIColor blackColor],
+                                              };
+    self.zb_navigationBar.backButtonAttributes = @{
+                                                   NSForegroundColorAttributeName : [UIColor blackColor],
+                                                   };
+//    self.zb_navigationBar.alpha = 0.3;
+}
+
+- (BOOL)navigationBarBackButtonShouldValidate:(ZbNavigationBar *)navigationBar {
+    NSLog(@"返回按钮被点击");
+    return YES;
 }
 
 @end

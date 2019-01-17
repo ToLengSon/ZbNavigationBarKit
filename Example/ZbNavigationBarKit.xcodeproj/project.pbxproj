@@ -32,7 +32,6 @@
 		8ADC9E4321F04DCC007021AF /* zjnews_common_nav_service_default_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ADC9E4121F04DCC007021AF /* zjnews_common_nav_service_default_icon@2x.png */; };
 		8ADC9E4A21F04F1F007021AF /* zjnews_common_nav_search_default_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ADC9E4821F04F1F007021AF /* zjnews_common_nav_search_default_icon@3x.png */; };
 		8ADC9E4B21F04F1F007021AF /* zjnews_common_nav_search_default_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ADC9E4921F04F1F007021AF /* zjnews_common_nav_search_default_icon@2x.png */; };
-		E0BEE6CB4A3CCFE22D450A86 /* Pods_ZbNavigationBarKit_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 190D79D3E7B172638082F7F1 /* Pods_ZbNavigationBarKit_Tests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,11 +80,8 @@
 		8ADC9E4121F04DCC007021AF /* zjnews_common_nav_service_default_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zjnews_common_nav_service_default_icon@2x.png"; sourceTree = "<group>"; };
 		8ADC9E4821F04F1F007021AF /* zjnews_common_nav_search_default_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zjnews_common_nav_search_default_icon@3x.png"; sourceTree = "<group>"; };
 		8ADC9E4921F04F1F007021AF /* zjnews_common_nav_search_default_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zjnews_common_nav_search_default_icon@2x.png"; sourceTree = "<group>"; };
-		8ADC9E4C21F054FB007021AF /* demo.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = demo.mp4; sourceTree = "<group>"; };
 		B2EFC613066C00CFB91DAF14 /* ZbNavigationBarKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ZbNavigationBarKit.podspec; path = ../ZbNavigationBarKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		BA097071E13654CD8B236000 /* Pods-ZbNavigationBarKit_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZbNavigationBarKit_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZbNavigationBarKit_Example/Pods-ZbNavigationBarKit_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		D67B3DEF12A09FFFC3D34430 /* Pods-ZbNavigationBarKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZbNavigationBarKit_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZbNavigationBarKit_Tests/Pods-ZbNavigationBarKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		E7FEE68512C82F3ACB3F12B6 /* Pods-ZbNavigationBarKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZbNavigationBarKit_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZbNavigationBarKit_Tests/Pods-ZbNavigationBarKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		FD6C4A0B6A233B52E28A6113 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,7 +104,6 @@
 				6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				E0BEE6CB4A3CCFE22D450A86 /* Pods_ZbNavigationBarKit_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,7 +165,6 @@
 		6003F594195388D20070C39A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				8ADC9E4C21F054FB007021AF /* demo.mp4 */,
 				8ADC9E4921F04F1F007021AF /* zjnews_common_nav_search_default_icon@2x.png */,
 				8ADC9E4821F04F1F007021AF /* zjnews_common_nav_search_default_icon@3x.png */,
 				8ADC9E4121F04DCC007021AF /* zjnews_common_nav_service_default_icon@2x.png */,
@@ -221,8 +215,6 @@
 			children = (
 				BA097071E13654CD8B236000 /* Pods-ZbNavigationBarKit_Example.debug.xcconfig */,
 				3C3E21E2C6D68B9FD634A5DE /* Pods-ZbNavigationBarKit_Example.release.xcconfig */,
-				D67B3DEF12A09FFFC3D34430 /* Pods-ZbNavigationBarKit_Tests.debug.xcconfig */,
-				E7FEE68512C82F3ACB3F12B6 /* Pods-ZbNavigationBarKit_Tests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -253,11 +245,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "ZbNavigationBarKit_Tests" */;
 			buildPhases = (
-				384D49292BF23C908F5779AE /* [CP] Check Pods Manifest.lock */,
 				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
-				126B460AB6529C340BCC49EB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -337,50 +327,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		126B460AB6529C340BCC49EB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-ZbNavigationBarKit_Tests/Pods-ZbNavigationBarKit_Tests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ZbNavigationBarKit_Tests/Pods-ZbNavigationBarKit_Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		384D49292BF23C908F5779AE /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-ZbNavigationBarKit_Tests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		97B7CB397C7E02E14B04D632 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -594,7 +540,6 @@
 		};
 		6003F5C3195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D67B3DEF12A09FFFC3D34430 /* Pods-ZbNavigationBarKit_Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -618,7 +563,6 @@
 		};
 		6003F5C4195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E7FEE68512C82F3ACB3F12B6 /* Pods-ZbNavigationBarKit_Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
