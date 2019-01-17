@@ -9,6 +9,8 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
+
+
 ## Requirements
 
 ## Installation
@@ -22,7 +24,7 @@ pod 'ZbNavigationBarKit'
 
 ## Author
 
-835151791@qq.com, 835151791@qq.com
+835151791@qq.com
 
 ## License
 
