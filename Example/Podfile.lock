@@ -1,0 +1,31 @@
+PODS:
+  - FBSnapshotTestCase (2.1.4):
+    - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
+  - FBSnapshotTestCase/Core (2.1.4)
+  - FBSnapshotTestCase/SwiftSupport (2.1.4):
+    - FBSnapshotTestCase/Core
+  - Masonry (1.1.0)
+  - ZbNavigationBarKit (0.1.0):
+    - Masonry
+
+DEPENDENCIES:
+  - FBSnapshotTestCase
+  - ZbNavigationBarKit (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - FBSnapshotTestCase
+    - Masonry
+
+EXTERNAL SOURCES:
+  ZbNavigationBarKit:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  ZbNavigationBarKit: 2fc7176b66579221be4972daab9ba77aaa546f16
+
+PODFILE CHECKSUM: b86b3418dc8eb481fd46c336ca517d91439973b2
+
+COCOAPODS: 1.5.3
