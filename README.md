@@ -9,7 +9,7 @@
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-
+<video src="https://github.com/ToLengSon/ZbNavigationBarKit/blob/master/Example/ZbNavigationBarKit/demo.mp4" autoplay loop="-1"></video>
 
 ## Requirements
 
