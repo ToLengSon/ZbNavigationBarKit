@@ -81,6 +81,17 @@
                       @"vcName" : @"ZbDemoViewController"
                       },];
     
+    UILabel *largeLabel = [[UILabel alloc] init];
+    largeLabel.font = [UIFont systemFontOfSize:25];
+    largeLabel.textColor = [UIColor whiteColor];
+    largeLabel.text = @"浙江新闻";
+    [self.zb_navigationBar.bottomView addSubview:largeLabel];
+    [largeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(10);
+        make.top.right.mas_equalTo(0);
+        make.bottom.mas_equalTo(-5);
+    }];
+    self.zb_navigationBar.bottomView.backgroundColor = self.zb_navigationBar.backgroundColor;
 }
 
 #pragma mark - Table view data source

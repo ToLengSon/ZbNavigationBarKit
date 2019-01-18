@@ -65,6 +65,7 @@ static NSDictionary *_sTitleAttributes;
 @synthesize leftView = _leftView;
 @synthesize centerView = _centerView;
 @synthesize rightView = _rightView;
+@synthesize bottomView = _bottomView;
 
 #pragma mark - Life Circle -- 生命周期和初始化设置
 
@@ -116,8 +117,10 @@ static NSDictionary *_sTitleAttributes;
     [self addSubview:_barContainer];
     [_barContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.separator.mas_top);
-        make.height.mas_equalTo(ZB_NAVIGATION_BAR_HEIGHT - [UIApplication sharedApplication].statusBarFrame.size.height);
+        make.bottom.mas_equalTo(self.separator.mas_top).priorityLow();
+        CGFloat top = [UIApplication sharedApplication].statusBarFrame.size.height;
+        make.top.mas_equalTo(top);
+        make.height.mas_equalTo(ZB_NAVIGATION_BAR_HEIGHT - top);
     }];
 }
 
@@ -221,6 +224,19 @@ static NSDictionary *_sTitleAttributes;
     return _rightView;
 }
 
+- (ZbNavigationBarLayoutView *)bottomView {
+    if (!_bottomView) {
+        _bottomView = [[ZbNavigationBarLayoutView alloc] init];
+        [self addSubview:_bottomView];
+        [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.separator.mas_top);
+            make.top.mas_equalTo(self.barContainer.mas_bottom);
+            make.left.right.mas_equalTo(0);
+        }];
+    }
+    return _bottomView;
+}
+
 - (void)setBackgroundColors:(NSArray<UIColor *> *)backgroundColors {
     _backgroundColors = backgroundColors;
     
@@ -238,7 +254,6 @@ static NSDictionary *_sTitleAttributes;
 - (CAGradientLayer *)gradientLayer {
     if (!_gradientLayer) {
         _gradientLayer = [CAGradientLayer layer];
-        _gradientLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, ZB_NAVIGATION_BAR_HEIGHT);
         _gradientLayer.startPoint = self.startPoint;
         _gradientLayer.endPoint = self.endPoint;
         [self.layer insertSublayer:_gradientLayer atIndex:0];
@@ -386,7 +401,11 @@ static NSDictionary *_sTitleAttributes;
 }
 
 #pragma mark - Override -- 重写方法
-
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    _gradientLayer.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+}
 
 #pragma mark - Public -- 公有方法
 
@@ -440,7 +459,6 @@ static NSDictionary *_sTitleAttributes;
         objc_setAssociatedObject(self, _cmd, navigationBar, OBJC_ASSOCIATION_ASSIGN);
         [navigationBar mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.top.right.mas_equalTo(0);
-            make.height.mas_equalTo(ZB_NAVIGATION_BAR_HEIGHT);
         }];
         
         navigationBar.currentViewController = self;

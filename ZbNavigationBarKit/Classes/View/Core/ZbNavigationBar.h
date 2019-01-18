@@ -78,6 +78,8 @@
 @property (nonatomic, strong, readonly) ZbNavigationBarLayoutView *centerView;
 /** 右边导航栏视图 */
 @property (nonatomic, strong, readonly) ZbNavigationBarLayoutView *rightView;
+/** 导航栏底部额外视图 */
+@property (nonatomic, strong, readonly) ZbNavigationBarLayoutView *bottomView;
 
 #pragma mark - Function -- 方法声明
 

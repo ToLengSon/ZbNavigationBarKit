@@ -25,6 +25,10 @@
 
 @property (nonatomic, strong) UIView *zb_currentNavigationBarSnapView;
 
+@property (nonatomic, assign, getter=zb_isBeginTransition) BOOL zb_beginTransition;
+
+- (UIViewController *)disappearingViewController;
+
 @end
 
 
@@ -40,7 +44,6 @@
         objc_setAssociatedObject(self, _cmd, transitionContainerView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [transitionContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.left.right.mas_equalTo(0);
-            make.height.mas_equalTo(ZB_NAVIGATION_BAR_HEIGHT);
         }];
     }
     return objc_getAssociatedObject(self, _cmd);
@@ -78,21 +81,16 @@
     return objc_getAssociatedObject(self, _cmd);
 }
 
+- (void)setZb_beginTransition:(BOOL)zb_beginTransition {
+    objc_setAssociatedObject(self, @selector(zb_isBeginTransition), @(zb_beginTransition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)zb_isBeginTransition {
+    return [objc_getAssociatedObject(self, _cmd) boolValue];
+}
+
 #pragma mark - MethodSwizzling -- Runtime方法交换
 + (void)load {
-
-    // 监听过渡动画的开始
-    Class clazz = NSClassFromString(@"_UINavigationInteractiveTransition");
-    SEL hookSel = @selector(zb_handleNavigationTransition:);
-    Method hookMethod = class_getInstanceMethod(self, hookSel);
-    
-    class_addMethod(clazz,
-                    hookSel,
-                    method_getImplementation(hookMethod),
-                    method_getTypeEncoding(hookMethod));
-    
-    method_exchangeImplementations(class_getInstanceMethod(clazz, NSSelectorFromString(@"handleNavigationTransition:")),
-                                   class_getInstanceMethod(clazz, hookSel));
     
     // 监听过渡
     method_exchangeImplementations(class_getInstanceMethod(self, NSSelectorFromString(@"_updateInteractiveTransition:")),
@@ -104,62 +102,50 @@
 
 
 #pragma mark - Private -- 私有方法
-- (void)zb_handleNavigationTransition:(UIScreenEdgePanGestureRecognizer *)gestureRecognizer {
-        
-    if (UIGestureRecognizerStateBegan == gestureRecognizer.state) {
-        
-        UINavigationController *navigationController = objc_getAssociatedObject(gestureRecognizer, @selector(zb_overrideViewDidLoad));
-        
-        navigationController.zb_currentNavigationBarView = objc_getAssociatedObject(navigationController.topViewController, @selector(zb_navigationBar));
-        
-        if (!navigationController.zb_currentNavigationBarView ||
-            navigationController.zb_currentNavigationBarView.isHidden ||
-            navigationController.zb_currentNavigationBarView.alpha == 0) {
-            [self zb_handleNavigationTransition:gestureRecognizer];
-            return;
-        }
-        
-        navigationController.zb_currentNavigationBarSnapView = [navigationController.zb_currentNavigationBarView snapshotViewAfterScreenUpdates:NO];
-        
-        [self zb_handleNavigationTransition:gestureRecognizer];
-        
-        navigationController.zb_preNavigationBarView = objc_getAssociatedObject(navigationController.topViewController, @selector(zb_navigationBar));
-        
-        if (!navigationController.zb_preNavigationBarView ||
-            navigationController.zb_preNavigationBarView.isHidden ||
-            navigationController.zb_preNavigationBarView.alpha == 0) {
-            [self zb_handleNavigationTransition:gestureRecognizer];
-            return;
-        }
-        
-        navigationController.zb_preNavigationBarSnapView = [navigationController.zb_preNavigationBarView zb_snap];
-        
-        // 满足过渡条件
-        [navigationController.zb_transitionContainerView addSubview:navigationController.zb_preNavigationBarSnapView];
-        navigationController.zb_preNavigationBarView.hidden = YES;
-        [navigationController.zb_preNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(0);
-        }];
-        
-        [navigationController.zb_transitionContainerView addSubview:navigationController.zb_currentNavigationBarSnapView];
-        navigationController.zb_currentNavigationBarView.hidden = YES;
-        [navigationController.zb_currentNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(0);
-        }];
+- (void)zb_updateInteractiveTransition:(CGFloat)percentComplete {
+    [self zb_updateInteractiveTransition:percentComplete];
+    
+    if (self.zb_isBeginTransition) {
+        [self zb_navigationBarTransition:percentComplete];
     } else {
-        [self zb_handleNavigationTransition:gestureRecognizer];
+        [self zb_navigationBarBeginTransition:percentComplete];
     }
 }
 
-- (void)zb_updateInteractiveTransition:(CGFloat)percentComplete {
-    [self zb_updateInteractiveTransition:percentComplete];
+- (void)zb_navigationBarBeginTransition:(CGFloat)percentComplete {
+    
+    self.zb_preNavigationBarView = objc_getAssociatedObject(self.topViewController, @selector(zb_navigationBar));
+    // 不能动画直接返回
+    if (![self zb_canTransitionView:self.zb_preNavigationBarView]) return;
+    
+    self.zb_currentNavigationBarView = objc_getAssociatedObject([self disappearingViewController], @selector(zb_navigationBar));
+    // 不能动画直接返回
+    if (![self zb_canTransitionView:self.zb_preNavigationBarView]) return;
+    
+    // 可以进行动画
+    self.zb_preNavigationBarSnapView = [self.zb_preNavigationBarView zb_snap];
+    self.zb_currentNavigationBarSnapView = [self.zb_currentNavigationBarView snapshotViewAfterScreenUpdates:NO];
+    
+    [self zb_navigationBarTransition:percentComplete];
+    
+    self.zb_preNavigationBarView.hidden = YES;
+    self.zb_currentNavigationBarView.hidden = YES;
+    
+    [self zb_addSnapView:self.zb_preNavigationBarSnapView];
+    [self zb_addSnapView:self.zb_currentNavigationBarSnapView];
 
+    self.zb_beginTransition = YES;
+}
+
+- (void)zb_navigationBarTransition:(CGFloat)percentComplete {
     self.zb_preNavigationBarSnapView.alpha = percentComplete;
     self.zb_currentNavigationBarSnapView.alpha = 1 - percentComplete;
 }
 
 - (void)zb_navigationBarDidEndAnimation:(UINavigationBar *)navigationBar {
     [self zb_navigationBarDidEndAnimation:navigationBar];
+    
+    self.zb_beginTransition = NO;
     
     self.zb_preNavigationBarView.hidden = NO;
     self.zb_preNavigationBarView = nil;
@@ -172,16 +158,22 @@
     self.zb_currentNavigationBarSnapView = nil;
 }
 
-#pragma mark - Override -- 重写方法
-- (void)zb_overrideViewDidLoad {
-    [super zb_overrideViewDidLoad];
-    
-    objc_setAssociatedObject(self.interactivePopGestureRecognizer, _cmd, self, OBJC_ASSOCIATION_ASSIGN);
+- (BOOL)zb_canTransitionView:(UIView *)view {
+    return view && !view.isHidden && view.alpha > 0;
 }
 
+- (void)zb_addSnapView:(UIView *)snapView {
+    [self.zb_transitionContainerView addSubview:snapView];
+    [snapView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(snapView.frame.size.height);
+        make.bottom.mas_lessThanOrEqualTo(self.zb_transitionContainerView);
+    }];
+}
+
+#pragma mark - Override -- 重写方法
 
 #pragma mark - Public -- 公有方法
-
 
 #pragma mark - Delegate -- 代理方法，每个代理新建一个mark。
 

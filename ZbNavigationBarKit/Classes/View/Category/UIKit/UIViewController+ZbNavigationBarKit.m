@@ -26,16 +26,16 @@
 }
 
 #pragma mark - MethodSwizzling -- Runtime方法交换
-+ (void)load {
-    method_exchangeImplementations(class_getInstanceMethod(self, @selector(viewDidLoad)),
-                                   class_getInstanceMethod(self, @selector(zb_viewDidLoad)));
-}
+//+ (void)load {
+//    method_exchangeImplementations(class_getInstanceMethod(self, @selector(viewDidLoad)),
+//                                   class_getInstanceMethod(self, @selector(zb_viewDidLoad)));
+//}
 
 #pragma mark - Private -- 私有方法
-- (void)zb_viewDidLoad {
-    [self zb_viewDidLoad];
-    [self zb_overrideViewDidLoad];
-}
+//- (void)zb_viewDidLoad {
+//    [self zb_viewDidLoad];
+//    [self zb_overrideViewDidLoad];
+//}
 
 #pragma mark - Override -- 重写方法
 
