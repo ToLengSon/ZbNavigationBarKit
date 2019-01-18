@@ -135,9 +135,16 @@ static NSDictionary *_sTitleAttributes;
     [self setupTitleAttributes];
 }
 
+- (void)setHiddenTitle:(BOOL)hiddenTitle {
+    _hiddenTitle = hiddenTitle;
+    
+    _titleLabel.hidden = hiddenTitle;
+}
+
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
+        _titleLabel.hidden = _hiddenTitle;
         [_titleLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         [self.centerView addSubview:_titleLabel];
@@ -227,6 +234,7 @@ static NSDictionary *_sTitleAttributes;
 - (ZbNavigationBarLayoutView *)bottomView {
     if (!_bottomView) {
         _bottomView = [[ZbNavigationBarLayoutView alloc] init];
+        _bottomView.clipsToBounds = YES;
         [self addSubview:_bottomView];
         [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(self.separator.mas_top);
@@ -371,11 +379,8 @@ static NSDictionary *_sTitleAttributes;
 }
 
 - (void)setupTitleAttributes {
-    
-    if (_title) {
-        self.titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title
-                                                                         attributes:_titleAttributes ? : _sTitleAttributes];
-    }
+    self.titleLabel.attributedText = _title ? [[NSAttributedString alloc] initWithString:_title
+                                                                              attributes:_titleAttributes ? : _sTitleAttributes] : nil;
 }
 
 - (void)setupBackButtonAttributes {
@@ -386,7 +391,7 @@ static NSDictionary *_sTitleAttributes;
         ZbNavigationBar *preNavigationBar = objc_getAssociatedObject(self.preViewController, @selector(zb_navigationBar));
         backButtonTitle = preNavigationBar.title;
     }
-    [_backButton setAttributedTitle:[[NSAttributedString alloc] initWithString:backButtonTitle attributes:_backButtonAttributes ? : _sBackButtonAttributes]
+    [_backButton setAttributedTitle:backButtonTitle ? [[NSAttributedString alloc] initWithString:backButtonTitle attributes:_backButtonAttributes ? : _sBackButtonAttributes] : nil
                            forState:UIControlStateNormal];
 }
 

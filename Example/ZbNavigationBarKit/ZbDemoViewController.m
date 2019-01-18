@@ -8,6 +8,7 @@
 
 #import "ZbDemoViewController.h"
 #import "ZbNavigationBarKit.h"
+#import "Masonry.h"
 
 @interface ZbDemoViewController ()
 <ZbNavigationBarDelegate>
@@ -40,6 +41,19 @@
     self.zb_navigationBar.backButtonAttributes = @{
                                                    NSForegroundColorAttributeName : [UIColor blackColor],
                                                    };
+    
+//    UILabel *largeLabel = [[UILabel alloc] init];
+//    largeLabel.font = [UIFont systemFontOfSize:25];
+//    largeLabel.textColor = [UIColor whiteColor];
+//    largeLabel.text = @"浙江新闻";
+//    [self.zb_navigationBar.bottomView addSubview:largeLabel];
+//    [largeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.mas_equalTo(10);
+//        make.top.right.mas_equalTo(0);
+//        make.bottom.mas_equalTo(-5);
+//    }];
+//    self.zb_navigationBar.bottomView.backgroundColor = self.zb_navigationBar.backgroundColor;
+    
 //    self.zb_navigationBar.alpha = 0.3;
 }
 

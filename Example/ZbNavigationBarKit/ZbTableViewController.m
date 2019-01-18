@@ -17,6 +17,8 @@
 
 @property (nonatomic, strong) NSArray *data;
 
+@property (weak, nonatomic) UIView *largeView;
+
 @end
 
 @implementation ZbTableViewController
@@ -30,6 +32,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    self.zb_navigationBar.alpha = 0.5;
     
     self.zb_navigationBar.title = @"浙江新闻";
     self.zb_navigationBar.backgroundColor = [UIColor colorWithRed:209 / 255.0
@@ -74,22 +78,33 @@
         make.left.top.bottom.mas_equalTo(0);
     }];
     
-    self.tableView.contentInset = UIEdgeInsetsMake(ZB_NAVIGATION_BAR_HEIGHT - [UIApplication sharedApplication].statusBarFrame.size.height, 0, 0, 0);
+    self.tableView.contentInset = UIEdgeInsetsMake(ZB_NAVIGATION_BAR_HEIGHT - [UIApplication sharedApplication].statusBarFrame.size.height + 35, 0, 0, 0);
     
     self.data = @[@{
                       @"title" : @"Demo演示",
                       @"vcName" : @"ZbDemoViewController"
                       },];
     
+    UIView *largeView = [[UIView alloc] init];
+    
+    [self.zb_navigationBar.bottomView addSubview:largeView];
+    self.largeView = largeView;
+    [largeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
+        make.height.mas_equalTo(35);
+    }];
+    
     UILabel *largeLabel = [[UILabel alloc] init];
     largeLabel.font = [UIFont systemFontOfSize:25];
     largeLabel.textColor = [UIColor whiteColor];
     largeLabel.text = @"浙江新闻";
-    [self.zb_navigationBar.bottomView addSubview:largeLabel];
+    [largeView addSubview:largeLabel];
+    
     [largeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(10);
-        make.top.right.mas_equalTo(0);
+        make.left.mas_equalTo(8);
+        make.right.mas_equalTo(0);
         make.bottom.mas_equalTo(-5);
+        make.height.mas_equalTo(30);
     }];
     self.zb_navigationBar.bottomView.backgroundColor = self.zb_navigationBar.backgroundColor;
 }
@@ -117,16 +132,54 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat rate = scrollView.contentOffset.y / 64;
     
-    if (rate < -1) {
-        rate = 1;
-    } else if (rate >= 0) {
-        rate = 0;
-    } else {
-        rate = -rate;
+    self.zb_navigationBar.hiddenTitle = scrollView.contentOffset.y < -64 - 9;
+    
+    CGFloat height = -64 - scrollView.contentOffset.y;
+    
+    if (height < 0) {
+        height = 0;
+    } else if (height > 35) {
+        height = 35;
     }
-    self.zb_navigationBar.alpha = rate;
+    
+    [self.largeView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+    }];
+    
+//    NSLog(@"%f", scrollView.contentOffset.y);
+    
+//    CGFloat rate = scrollView.contentOffset.y / 64;
+//
+//    if (rate < -1) {
+//        rate = 1;
+//    } else if (rate >= 0) {
+//        rate = 0;
+//    } else {
+//        rate = -rate;
+//    }
+//    self.zb_navigationBar.alpha = rate;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [self autoBounce];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        [self autoBounce];
+    }
+}
+
+- (void)autoBounce {
+    
+    if (self.largeView.frame.size.height < 35) {
+        if (self.largeView.frame.size.height > 35 * 0.5) {
+            [self.tableView setContentOffset:CGPointMake(0, -99) animated:YES];
+        } else if (self.largeView.frame.size.height > 0) {
+            [self.tableView setContentOffset:CGPointMake(0, -64) animated:YES];
+        }
+    }
 }
 
 @end

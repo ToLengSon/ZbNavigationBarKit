@@ -71,6 +71,8 @@
 #pragma mark - 导航栏内容设置
 /** 标题文字 */
 @property (nonatomic, copy) NSString *title;
+/** 隐藏标题文字 */
+@property (nonatomic, assign, getter=isHiddenTitle) BOOL hiddenTitle;
 
 /** 左边导航栏视图 */
 @property (nonatomic, strong, readonly) ZbNavigationBarLayoutView *leftView;

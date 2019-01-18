@@ -133,6 +133,9 @@
     
     [self zb_addSnapView:self.zb_preNavigationBarSnapView];
     [self zb_addSnapView:self.zb_currentNavigationBarSnapView];
+    [self.zb_transitionContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(MAX(self.zb_preNavigationBarSnapView.frame.size.height, self.zb_currentNavigationBarSnapView.frame.size.height));
+    }];
 
     self.zb_beginTransition = YES;
 }
@@ -167,7 +170,6 @@
     [snapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(0);
         make.height.mas_equalTo(snapView.frame.size.height);
-        make.bottom.mas_lessThanOrEqualTo(self.zb_transitionContainerView);
     }];
 }
 

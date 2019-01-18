@@ -5,13 +5,17 @@
 [![License](https://img.shields.io/cocoapods/l/ZbNavigationBarKit.svg?style=flat)](https://cocoapods.org/pods/ZbNavigationBarKit)
 [![Platform](https://img.shields.io/cocoapods/p/ZbNavigationBarKit.svg?style=flat)](https://cocoapods.org/pods/ZbNavigationBarKit)
 
-## Example
+## 具备的能力
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+1. 滑动返回导航栏有很好的过渡动画
+2. 导航栏主体分为左中右视图，高度定制
+3. 可给导航栏添加额外视图，Demo工程实现了iOS 11的大标题
+4. 支持背景渐变色
+5. 可拦截导航栏返回按钮点击事件
 
-![](https://ws1.sinaimg.cn/large/006tNc79ly1fz9kkty578g30f00qox6q.gif)
+## 不足与后期版本改进
 
-## Requirements
+1. 迅速滑动返回时，导航栏会有上一个页面导航栏影像瞬间闪烁
 
 ## Installation
 
