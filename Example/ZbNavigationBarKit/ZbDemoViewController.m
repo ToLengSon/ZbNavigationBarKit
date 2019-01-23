@@ -29,11 +29,12 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
+    self.zb_navigationBar.backgroundColor = [UIColor whiteColor];
     
     self.zb_navigationBar.title = @"演示样例";
-    self.zb_navigationBar.backgroundColors = @[[UIColor yellowColor], [UIColor purpleColor]];
-    self.zb_navigationBar.startPoint = CGPointMake(0, 0.5);
-    self.zb_navigationBar.endPoint = CGPointMake(1, 0.5);
+//    self.zb_navigationBar.backgroundColors = @[[UIColor yellowColor], [UIColor purpleColor]];
+//    self.zb_navigationBar.startPoint = CGPointMake(0, 0.5);
+//    self.zb_navigationBar.endPoint = CGPointMake(1, 0.5);
     self.zb_navigationBar.delegate = self;
     self.zb_navigationBar.titleAttributes = @{
                                               NSForegroundColorAttributeName : [UIColor blackColor],

@@ -17,9 +17,9 @@
 
 @property (nonatomic, strong) UIView *zb_transitionContainerView;
 
-@property (nonatomic, weak) UIView *zb_preNavigationBarView;
+@property (nonatomic, weak) ZbNavigationBar *zb_preNavigationBarView;
 
-@property (nonatomic, weak) UIView *zb_currentNavigationBarView;
+@property (nonatomic, weak) ZbNavigationBar *zb_currentNavigationBarView;
 
 @property (nonatomic, strong) UIView *zb_preNavigationBarSnapView;
 
@@ -124,25 +124,39 @@
     
     // 可以进行动画
     self.zb_preNavigationBarSnapView = [self.zb_preNavigationBarView zb_snap];
-    self.zb_currentNavigationBarSnapView = [self.zb_currentNavigationBarView snapshotViewAfterScreenUpdates:NO];
+    self.zb_currentNavigationBarSnapView = [self.zb_currentNavigationBarView zb_snap];
     
     [self zb_navigationBarTransition:percentComplete];
     
     self.zb_preNavigationBarView.hidden = YES;
     self.zb_currentNavigationBarView.hidden = YES;
     
-    [self zb_addSnapView:self.zb_preNavigationBarSnapView];
-    [self zb_addSnapView:self.zb_currentNavigationBarSnapView];
+    [self.zb_transitionContainerView addSubview:self.zb_preNavigationBarSnapView];
+    [self.zb_transitionContainerView addSubview:self.zb_currentNavigationBarSnapView];
+    
+    [self.zb_preNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.zb_currentNavigationBarSnapView);
+    }];
+    
     [self.zb_transitionContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(MAX(self.zb_preNavigationBarSnapView.frame.size.height, self.zb_currentNavigationBarSnapView.frame.size.height));
+        make.height.mas_equalTo(self.zb_currentNavigationBarSnapView);
+    }];
+    
+    [self.zb_currentNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(0);
     }];
 
     self.zb_beginTransition = YES;
 }
 
 - (void)zb_navigationBarTransition:(CGFloat)percentComplete {
+    
     self.zb_preNavigationBarSnapView.alpha = percentComplete;
     self.zb_currentNavigationBarSnapView.alpha = 1 - percentComplete;
+    
+    [self.zb_currentNavigationBarSnapView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.zb_currentNavigationBarView.frame.size.height - percentComplete * (self.zb_currentNavigationBarView.frame.size.height - self.zb_preNavigationBarView.frame.size.height));
+    }];
 }
 
 - (void)zb_navigationBarDidEndAnimation:(UINavigationBar *)navigationBar {
@@ -165,13 +179,13 @@
     return view && !view.isHidden && view.alpha > 0;
 }
 
-- (void)zb_addSnapView:(UIView *)snapView {
-    [self.zb_transitionContainerView addSubview:snapView];
-    [snapView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(snapView.frame.size.height);
-    }];
-}
+//- (void)zb_addSnapView:(UIView *)snapView {
+//    [self.zb_transitionContainerView addSubview:snapView];
+//    [snapView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.left.right.mas_equalTo(0);
+//        make.height.mas_equalTo(snapView.frame.size.height);
+//    }];
+//}
 
 #pragma mark - Override -- 重写方法
 

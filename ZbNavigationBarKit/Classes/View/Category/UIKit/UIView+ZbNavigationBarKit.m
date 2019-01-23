@@ -60,7 +60,7 @@
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
     [self.layer renderInContext:UIGraphicsGetCurrentContext()];
-    imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+    imageView.image = [UIGraphicsGetImageFromCurrentImageContext() resizableImageWithCapInsets:UIEdgeInsetsMake(self.frame.size.height - 3, self.frame.size.width * 0.5 - 1, self.frame.size.height - 2, self.frame.size.width * 0.5 + 1)];
     UIGraphicsEndImageContext();
     return imageView;
 }

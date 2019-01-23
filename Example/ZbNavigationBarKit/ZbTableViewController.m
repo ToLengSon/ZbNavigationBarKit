@@ -26,8 +26,9 @@
 + (void)load {
     ZbNavigationBar.titleAttributes = @{
                                         NSFontAttributeName : [UIFont systemFontOfSize:17],
-                                        NSForegroundColorAttributeName : [UIColor whiteColor]
+                                        NSForegroundColorAttributeName : [UIColor blackColor]
                                         };
+//    ZbNavigationBar.backButtonTitle = @"";
 }
 
 - (void)viewDidLoad {
@@ -36,10 +37,12 @@
 //    self.zb_navigationBar.alpha = 0.5;
     
     self.zb_navigationBar.title = @"浙江新闻";
-    self.zb_navigationBar.backgroundColor = [UIColor colorWithRed:209 / 255.0
-                                                            green:35 / 255.0
-                                                             blue:36 / 255.0
-                                                            alpha:1];
+    self.zb_navigationBar.backgroundColor = [UIColor whiteColor];
+    
+//    [UIColor colorWithRed:209 / 255.0
+//                    green:35 / 255.0
+//                     blue:36 / 255.0
+//                    alpha:1];
     
     UIButton *serviceBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     
@@ -96,7 +99,7 @@
     
     UILabel *largeLabel = [[UILabel alloc] init];
     largeLabel.font = [UIFont systemFontOfSize:25];
-    largeLabel.textColor = [UIColor whiteColor];
+    largeLabel.textColor = [UIColor blackColor];
     largeLabel.text = @"浙江新闻";
     [largeView addSubview:largeLabel];
     
