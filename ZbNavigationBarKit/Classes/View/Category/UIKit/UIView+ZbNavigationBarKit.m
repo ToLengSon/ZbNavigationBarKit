@@ -55,15 +55,7 @@
 
 
 #pragma mark - Public -- 公有方法
-// 截图
-- (UIView *)zb_snap {
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
-    [self.layer renderInContext:UIGraphicsGetCurrentContext()];
-    imageView.image = [UIGraphicsGetImageFromCurrentImageContext() resizableImageWithCapInsets:UIEdgeInsetsMake(self.frame.size.height - 3, self.frame.size.width * 0.5 - 1, self.frame.size.height - 2, self.frame.size.width * 0.5 + 1)];
-    UIGraphicsEndImageContext();
-    return imageView;
-}
+
 
 #pragma mark - Delegate -- 代理方法，每个代理新建一个mark。
 

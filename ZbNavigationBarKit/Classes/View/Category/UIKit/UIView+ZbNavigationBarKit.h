@@ -15,12 +15,6 @@
 @property (nonatomic, copy) void (^zb_didAddSubviewHandler)(UIView *subview);
 
 #pragma mark - Function -- 方法
-/**
- 截图
-
- @return 获取当前视图的截图
- */
-- (UIView *)zb_snap;
 
 
 @end

@@ -103,6 +103,16 @@
 
 
 #pragma mark - Private -- 私有方法
+// 截图
+- (UIView *)zb_snapWithView:(UIView *)view {
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
+    UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    imageView.image = [UIGraphicsGetImageFromCurrentImageContext() resizableImageWithCapInsets:UIEdgeInsetsMake(view.frame.size.height - 3, view.frame.size.width * 0.5 - 1, view.frame.size.height - 2, view.frame.size.width * 0.5 + 1)];
+    UIGraphicsEndImageContext();
+    return imageView;
+}
+
 - (void)zb_updateInteractiveTransition:(CGFloat)percentComplete {
     [self zb_updateInteractiveTransition:percentComplete];
     
@@ -124,8 +134,16 @@
     if (![self zb_canTransitionView:self.zb_preNavigationBarView]) return;
     
     // 可以进行动画
-    self.zb_preNavigationBarSnapView = [self.zb_preNavigationBarView zb_snap];
-    self.zb_currentNavigationBarSnapView = [self.zb_currentNavigationBarView zb_snap];
+    self.zb_preNavigationBarSnapView = [self zb_snapWithView:self.zb_preNavigationBarView];
+    self.zb_currentNavigationBarSnapView = [self zb_snapWithView:self.zb_currentNavigationBarView];
+    
+    if (self.zb_preNavigationBarSnapView.frame.size.height > self.zb_currentNavigationBarSnapView.frame.size.height) {
+        self.zb_preNavigationBarSnapView.contentMode = UIViewContentModeTop;
+        self.zb_currentNavigationBarSnapView.contentMode = UIViewContentModeScaleToFill;
+    } else {
+        self.zb_currentNavigationBarSnapView.contentMode = UIViewContentModeTop;
+        self.zb_preNavigationBarSnapView.contentMode = UIViewContentModeScaleToFill;
+    }
     
     [self zb_navigationBarTransition:percentComplete];
     
@@ -136,13 +154,15 @@
     [self.zb_transitionContainerView addSubview:self.zb_currentNavigationBarSnapView];
     
     [self.zb_preNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(self.zb_preNavigationBarSnapView.frame.size.height);
+        make.edges.mas_equalTo(self.zb_currentNavigationBarSnapView);
+    }];
+    
+    [self.zb_transitionContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.zb_currentNavigationBarSnapView);
     }];
     
     [self.zb_currentNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(self.zb_currentNavigationBarSnapView.frame.size.height);
     }];
     
     self.zb_beginTransition = YES;
@@ -153,7 +173,7 @@
     self.zb_preNavigationBarSnapView.alpha = percentComplete;
     self.zb_currentNavigationBarSnapView.alpha = 1 - percentComplete;
     
-    [self.zb_transitionContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.zb_currentNavigationBarSnapView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(self.zb_currentNavigationBarView.frame.size.height - percentComplete * (self.zb_currentNavigationBarView.frame.size.height - self.zb_preNavigationBarView.frame.size.height));
     }];
 }
