@@ -40,6 +40,7 @@
         UIView *transitionContainerView = [[UIView alloc] init];
         transitionContainerView.userInteractionEnabled = NO;
         transitionContainerView.backgroundColor = [UIColor clearColor];
+        transitionContainerView.clipsToBounds = YES;
         [self.view addSubview:transitionContainerView];
         objc_setAssociatedObject(self, _cmd, transitionContainerView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [transitionContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -135,17 +136,15 @@
     [self.zb_transitionContainerView addSubview:self.zb_currentNavigationBarSnapView];
     
     [self.zb_preNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.zb_currentNavigationBarSnapView);
-    }];
-    
-    [self.zb_transitionContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(self.zb_currentNavigationBarSnapView);
+        make.top.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(self.zb_preNavigationBarSnapView.frame.size.height);
     }];
     
     [self.zb_currentNavigationBarSnapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(self.zb_currentNavigationBarSnapView.frame.size.height);
     }];
-
+    
     self.zb_beginTransition = YES;
 }
 
@@ -154,7 +153,7 @@
     self.zb_preNavigationBarSnapView.alpha = percentComplete;
     self.zb_currentNavigationBarSnapView.alpha = 1 - percentComplete;
     
-    [self.zb_currentNavigationBarSnapView mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.zb_transitionContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(self.zb_currentNavigationBarView.frame.size.height - percentComplete * (self.zb_currentNavigationBarView.frame.size.height - self.zb_preNavigationBarView.frame.size.height));
     }];
 }
@@ -178,14 +177,6 @@
 - (BOOL)zb_canTransitionView:(UIView *)view {
     return view && !view.isHidden && view.alpha > 0;
 }
-
-//- (void)zb_addSnapView:(UIView *)snapView {
-//    [self.zb_transitionContainerView addSubview:snapView];
-//    [snapView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.left.right.mas_equalTo(0);
-//        make.height.mas_equalTo(snapView.frame.size.height);
-//    }];
-//}
 
 #pragma mark - Override -- 重写方法
 

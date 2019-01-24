@@ -28,7 +28,7 @@
                                         NSFontAttributeName : [UIFont systemFontOfSize:17],
                                         NSForegroundColorAttributeName : [UIColor blackColor]
                                         };
-//    ZbNavigationBar.backButtonTitle = @"";
+    ZbNavigationBar.backButtonTitle = @"";
 }
 
 - (void)viewDidLoad {
