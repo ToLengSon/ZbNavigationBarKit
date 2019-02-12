@@ -30,8 +30,6 @@
 
 - (UIViewController *)disappearingViewController;
 
-- (UIViewController *)_layoutTopViewController;
-
 @end
 
 
