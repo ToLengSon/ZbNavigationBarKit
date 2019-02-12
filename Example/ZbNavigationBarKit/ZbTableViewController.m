@@ -34,6 +34,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self addObserver:self.navigationController forKeyPath:@"customNavigationTransitionDuration" options:NSKeyValueObservingOptionNew context:nil];
+    
+//    [[[[self.navigationController.interactivePopGestureRecognizer valueForKeyPath:@"targets"] firstObject] valueForKeyPath:@"target"] valueForKeyPath:@"_averageVelocity"]
+    
 //    self.zb_navigationBar.alpha = 0.5;
     
     self.zb_navigationBar.title = @"浙江新闻";
@@ -110,6 +114,10 @@
         make.height.mas_equalTo(30);
     }];
     self.zb_navigationBar.bottomView.backgroundColor = self.zb_navigationBar.backgroundColor;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    NSLog(@"%@", change);
 }
 
 #pragma mark - Table view data source

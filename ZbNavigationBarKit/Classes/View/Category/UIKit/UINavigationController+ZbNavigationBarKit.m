@@ -14,6 +14,7 @@
 #pragma mark - Define&StaticVar -- 静态变量和Define声明
 
 @interface UINavigationController ()
+<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIView *zb_transitionContainerView;
 
@@ -28,6 +29,8 @@
 @property (nonatomic, assign, getter=zb_isBeginTransition) BOOL zb_beginTransition;
 
 - (UIViewController *)disappearingViewController;
+
+- (UIViewController *)_layoutTopViewController;
 
 @end
 
@@ -51,7 +54,7 @@
 }
 
 - (void)setZb_preNavigationBarView:(UIView *)zb_preNavigationBarView {
-    objc_setAssociatedObject(self, @selector(zb_preNavigationBarView), zb_preNavigationBarView, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(zb_preNavigationBarView), zb_preNavigationBarView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIView *)zb_preNavigationBarView {
@@ -59,7 +62,7 @@
 }
 
 - (void)setZb_currentNavigationBarView:(UIView *)zb_currentNavigationBarView {
-    objc_setAssociatedObject(self, @selector(zb_currentNavigationBarView), zb_currentNavigationBarView, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, @selector(zb_currentNavigationBarView), zb_currentNavigationBarView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIView *)zb_currentNavigationBarView {
@@ -96,13 +99,31 @@
     // 监听过渡
     method_exchangeImplementations(class_getInstanceMethod(self, NSSelectorFromString(@"_updateInteractiveTransition:")),
                                    class_getInstanceMethod(self, @selector(zb_updateInteractiveTransition:)));
-    // 监听动画结束
-    method_exchangeImplementations(class_getInstanceMethod(self, NSSelectorFromString(@"_navigationBarDidEndAnimation:")),
-                                   class_getInstanceMethod(self, @selector(zb_navigationBarDidEndAnimation:)));
+    
+    // 监听过渡完成
+    method_exchangeImplementations(class_getInstanceMethod(self, NSSelectorFromString(@"_finishInteractiveTransition:transitionContext:")),
+                                   class_getInstanceMethod(self, @selector(zb_finishInteractiveTransition:transitionContext:)));
+    // 监听过渡取消
+    method_exchangeImplementations(class_getInstanceMethod(self, NSSelectorFromString(@"_cancelInteractiveTransition:transitionContext:")),
+                                   class_getInstanceMethod(self, @selector(zb_cancelInteractiveTransition:transitionContext:)));
 }
 
 
 #pragma mark - Private -- 私有方法
+- (void)zb_cancelInteractiveTransition:(id)obj1 transitionContext:(void *)obj2 {
+    [self zb_cancelInteractiveTransition:obj1 transitionContext:obj2];
+    [self zb_completeInteractiveTransitionIsCancel:YES
+                                   percentComplete:[[obj1 valueForKeyPath:@"previousPercentComplete"] floatValue]
+                                          duration:[[obj1 valueForKeyPath:@"_duration"] floatValue]];
+}
+
+- (void)zb_finishInteractiveTransition:(id)obj1 transitionContext:(void *)obj2 {
+    [self zb_finishInteractiveTransition:obj1 transitionContext:obj2];
+    [self zb_completeInteractiveTransitionIsCancel:NO
+                                   percentComplete:[[obj1 valueForKeyPath:@"previousPercentComplete"] floatValue]
+                                          duration:[[obj1 valueForKeyPath:@"_duration"] floatValue]];
+}
+
 // 截图
 - (UIView *)zb_snapWithView:(UIView *)view {
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
@@ -178,20 +199,29 @@
     }];
 }
 
-- (void)zb_navigationBarDidEndAnimation:(UINavigationBar *)navigationBar {
-    [self zb_navigationBarDidEndAnimation:navigationBar];
+- (void)zb_completeInteractiveTransitionIsCancel:(BOOL)isCancel
+                                 percentComplete:(CGFloat)percentComplete
+                                        duration:(CGFloat)duration  {
     
-    self.zb_beginTransition = NO;
-    
-    self.zb_preNavigationBarView.hidden = NO;
-    self.zb_preNavigationBarView = nil;
-    [self.zb_preNavigationBarSnapView removeFromSuperview];
-    self.zb_preNavigationBarSnapView = nil;
-    
-    self.zb_currentNavigationBarView.hidden = NO;
-    self.zb_currentNavigationBarView = nil;
-    [self.zb_currentNavigationBarSnapView removeFromSuperview];
-    self.zb_currentNavigationBarSnapView = nil;
+    [UIView animateWithDuration:(1 - percentComplete) * duration
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self zb_navigationBarTransition:!isCancel];
+                     } completion:^(BOOL finished) {
+
+                         self.zb_beginTransition = NO;
+                         
+                         self.zb_preNavigationBarView.hidden = NO;
+                         self.zb_preNavigationBarView = nil;
+                         [self.zb_preNavigationBarSnapView removeFromSuperview];
+                         self.zb_preNavigationBarSnapView = nil;
+
+                         self.zb_currentNavigationBarView.hidden = NO;
+                         self.zb_currentNavigationBarView = nil;
+                         [self.zb_currentNavigationBarSnapView removeFromSuperview];
+                         self.zb_currentNavigationBarSnapView = nil;
+                     }];
 }
 
 - (BOOL)zb_canTransitionView:(UIView *)view {

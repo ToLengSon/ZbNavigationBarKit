@@ -42,7 +42,6 @@
     self.zb_navigationBar.backButtonAttributes = @{
                                                    NSForegroundColorAttributeName : [UIColor blackColor],
                                                    };
-    
 //    UILabel *largeLabel = [[UILabel alloc] init];
 //    largeLabel.font = [UIFont systemFontOfSize:25];
 //    largeLabel.textColor = [UIColor whiteColor];
@@ -57,10 +56,4 @@
     
 //    self.zb_navigationBar.alpha = 0.3;
 }
-
-- (BOOL)navigationBarBackButtonShouldValidate:(ZbNavigationBar *)navigationBar {
-    NSLog(@"返回按钮被点击");
-    return YES;
-}
-
 @end
