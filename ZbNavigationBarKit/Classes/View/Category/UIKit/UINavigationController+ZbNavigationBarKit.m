@@ -234,30 +234,30 @@
 - (void)zb_completeInteractiveTransitionIsCancel:(BOOL)isCancel
                                  percentComplete:(CGFloat)percentComplete
                                         duration:(CGFloat)duration  {
-    
-    if ([self zb_canTransitionView:self.zb_preNavigationBarView] &&
-        [self zb_canTransitionView:self.zb_currentNavigationBarView]) {
-        
-        [UIView animateWithDuration:(isCancel ? percentComplete : (1 - percentComplete)) * duration
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             [self zb_navigationBarTransition:!isCancel];
-                         } completion:^(BOOL finished) {
-                             
-                             self.zb_beginTransition = NO;
-                             
-                             self.zb_preNavigationBarView.hidden = NO;
-                             self.zb_preNavigationBarView = nil;
-                             [self.zb_preNavigationBarSnapView removeFromSuperview];
-                             self.zb_preNavigationBarSnapView = nil;
-                             
-                             self.zb_currentNavigationBarView.hidden = NO;
-                             self.zb_currentNavigationBarView = nil;
-                             [self.zb_currentNavigationBarSnapView removeFromSuperview];
-                             self.zb_currentNavigationBarSnapView = nil;
-                         }];
+    // 如果没有开始过渡，直接返回
+    if (!self.zb_isBeginTransition) {
+        return;
     }
+    
+    [UIView animateWithDuration:(isCancel ? percentComplete : (1 - percentComplete)) * duration
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self zb_navigationBarTransition:!isCancel];
+                     } completion:^(BOOL finished) {
+                         
+                         self.zb_beginTransition = NO;
+                         
+                         self.zb_preNavigationBarView.hidden = NO;
+                         self.zb_preNavigationBarView = nil;
+                         [self.zb_preNavigationBarSnapView removeFromSuperview];
+                         self.zb_preNavigationBarSnapView = nil;
+                         
+                         self.zb_currentNavigationBarView.hidden = NO;
+                         self.zb_currentNavigationBarView = nil;
+                         [self.zb_currentNavigationBarSnapView removeFromSuperview];
+                         self.zb_currentNavigationBarSnapView = nil;
+                     }];
 }
 
 /**
