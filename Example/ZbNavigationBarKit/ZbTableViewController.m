@@ -34,7 +34,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self addObserver:self.navigationController forKeyPath:@"customNavigationTransitionDuration" options:NSKeyValueObservingOptionNew context:nil];
+    return;
     
 //    [[[[self.navigationController.interactivePopGestureRecognizer valueForKeyPath:@"targets"] firstObject] valueForKeyPath:@"target"] valueForKeyPath:@"_averageVelocity"]
     

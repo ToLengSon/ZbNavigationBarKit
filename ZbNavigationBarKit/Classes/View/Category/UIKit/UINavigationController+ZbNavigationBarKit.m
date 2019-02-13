@@ -16,18 +16,24 @@
 @interface UINavigationController ()
 <UIGestureRecognizerDelegate>
 
+/** 导航栏过渡动画容器 */
 @property (nonatomic, strong) UIView *zb_transitionContainerView;
-
+/** 上一个导航栏 */
 @property (nonatomic, weak) ZbNavigationBar *zb_preNavigationBarView;
-
+/** 当前导航栏 */
 @property (nonatomic, weak) ZbNavigationBar *zb_currentNavigationBarView;
-
+/** 上一个导航栏截图 */
 @property (nonatomic, strong) UIView *zb_preNavigationBarSnapView;
-
+/** 当前导航栏截图 */
 @property (nonatomic, strong) UIView *zb_currentNavigationBarSnapView;
-
+/** 标识是否开始过渡 */
 @property (nonatomic, assign, getter=zb_isBeginTransition) BOOL zb_beginTransition;
 
+/**
+ 即将隐藏的控制器
+
+ @return 即将隐藏的控制器
+ */
 - (UIViewController *)disappearingViewController;
 
 @end
@@ -36,6 +42,7 @@
 @implementation UINavigationController (ZbNavigationBarKit)
 
 #pragma mark - Getter&Setter -- 懒加载
+/** 导航栏过渡动画容器 */
 - (UIView *)zb_transitionContainerView {
     if (!objc_getAssociatedObject(self, _cmd)) {
         UIView *transitionContainerView = [[UIView alloc] init];
@@ -51,42 +58,47 @@
     return objc_getAssociatedObject(self, _cmd);
 }
 
+/** 上一个导航栏 */
 - (void)setZb_preNavigationBarView:(UIView *)zb_preNavigationBarView {
     objc_setAssociatedObject(self, @selector(zb_preNavigationBarView), zb_preNavigationBarView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
+/** 上一个导航栏 */
 - (UIView *)zb_preNavigationBarView {
     return objc_getAssociatedObject(self, _cmd);
 }
 
+/** 当前导航栏 */
 - (void)setZb_currentNavigationBarView:(UIView *)zb_currentNavigationBarView {
     objc_setAssociatedObject(self, @selector(zb_currentNavigationBarView), zb_currentNavigationBarView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
+/** 当前导航栏 */
 - (UIView *)zb_currentNavigationBarView {
     return objc_getAssociatedObject(self, _cmd);
 }
 
+/** 上一个导航栏截图 */
 - (void)setZb_preNavigationBarSnapView:(UIView *)zb_preNavigationBarSnapView {
     objc_setAssociatedObject(self, @selector(zb_preNavigationBarSnapView), zb_preNavigationBarSnapView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
+/** 上一个导航栏截图 */
 - (UIView *)zb_preNavigationBarSnapView {
     return objc_getAssociatedObject(self, _cmd);
 }
 
+/** 当前导航栏截图 */
 - (void)setZb_currentNavigationBarSnapView:(UIView *)zb_currentNavigationBarSnapView {
     objc_setAssociatedObject(self, @selector(zb_currentNavigationBarSnapView), zb_currentNavigationBarSnapView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
+/** 当前导航栏截图 */
 - (UIView *)zb_currentNavigationBarSnapView {
     return objc_getAssociatedObject(self, _cmd);
 }
 
+/** 标识是否开始过渡 */
 - (void)setZb_beginTransition:(BOOL)zb_beginTransition {
     objc_setAssociatedObject(self, @selector(zb_isBeginTransition), @(zb_beginTransition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
+/** 标识是否开始过渡 */
 - (BOOL)zb_isBeginTransition {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
@@ -108,13 +120,18 @@
 
 
 #pragma mark - Private -- 私有方法
+/**
+ 当过渡动画取消时被调用
+ */
 - (void)zb_cancelInteractiveTransition:(id)obj1 transitionContext:(void *)obj2 {
     [self zb_cancelInteractiveTransition:obj1 transitionContext:obj2];
     [self zb_completeInteractiveTransitionIsCancel:YES
                                    percentComplete:[[obj1 valueForKeyPath:@"previousPercentComplete"] floatValue]
                                           duration:[[obj1 valueForKeyPath:@"_duration"] floatValue]];
 }
-
+/**
+ 当过渡动画完成时被调用
+ */
 - (void)zb_finishInteractiveTransition:(id)obj1 transitionContext:(void *)obj2 {
     [self zb_finishInteractiveTransition:obj1 transitionContext:obj2];
     [self zb_completeInteractiveTransitionIsCancel:NO
@@ -142,6 +159,11 @@
     }
 }
 
+/**
+ 开始过渡
+
+ @param percentComplete 过渡完成百分比
+ */
 - (void)zb_navigationBarBeginTransition:(CGFloat)percentComplete {
     
     self.zb_preNavigationBarView = objc_getAssociatedObject(self.topViewController, @selector(zb_navigationBar));
@@ -150,7 +172,7 @@
     
     self.zb_currentNavigationBarView = objc_getAssociatedObject([self disappearingViewController], @selector(zb_navigationBar));
     // 不能动画直接返回
-    if (![self zb_canTransitionView:self.zb_preNavigationBarView]) return;
+    if (![self zb_canTransitionView:self.zb_currentNavigationBarView]) return;
     
     // 可以进行动画
     self.zb_preNavigationBarSnapView = [self zb_snapWithView:self.zb_preNavigationBarView];
@@ -187,6 +209,11 @@
     self.zb_beginTransition = YES;
 }
 
+/**
+ 过渡中
+ 
+ @param percentComplete 过渡完成百分比
+ */
 - (void)zb_navigationBarTransition:(CGFloat)percentComplete {
     
     self.zb_preNavigationBarSnapView.alpha = percentComplete;
@@ -197,31 +224,48 @@
     }];
 }
 
+/**
+ 完成剩余部分的交互动画
+
+ @param isCancel 如果为YES标识取消，否则表示完成
+ @param percentComplete 过渡完成百分比
+ @param duration 完成时间
+ */
 - (void)zb_completeInteractiveTransitionIsCancel:(BOOL)isCancel
                                  percentComplete:(CGFloat)percentComplete
                                         duration:(CGFloat)duration  {
     
-    [UIView animateWithDuration:(isCancel ? percentComplete : (1 - percentComplete)) * duration
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:^{
-                         [self zb_navigationBarTransition:!isCancel];
-                     } completion:^(BOOL finished) {
-
-                         self.zb_beginTransition = NO;
-                         
-                         self.zb_preNavigationBarView.hidden = NO;
-                         self.zb_preNavigationBarView = nil;
-                         [self.zb_preNavigationBarSnapView removeFromSuperview];
-                         self.zb_preNavigationBarSnapView = nil;
-
-                         self.zb_currentNavigationBarView.hidden = NO;
-                         self.zb_currentNavigationBarView = nil;
-                         [self.zb_currentNavigationBarSnapView removeFromSuperview];
-                         self.zb_currentNavigationBarSnapView = nil;
-                     }];
+    if ([self zb_canTransitionView:self.zb_preNavigationBarView] &&
+        [self zb_canTransitionView:self.zb_currentNavigationBarView]) {
+        
+        [UIView animateWithDuration:(isCancel ? percentComplete : (1 - percentComplete)) * duration
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             [self zb_navigationBarTransition:!isCancel];
+                         } completion:^(BOOL finished) {
+                             
+                             self.zb_beginTransition = NO;
+                             
+                             self.zb_preNavigationBarView.hidden = NO;
+                             self.zb_preNavigationBarView = nil;
+                             [self.zb_preNavigationBarSnapView removeFromSuperview];
+                             self.zb_preNavigationBarSnapView = nil;
+                             
+                             self.zb_currentNavigationBarView.hidden = NO;
+                             self.zb_currentNavigationBarView = nil;
+                             [self.zb_currentNavigationBarSnapView removeFromSuperview];
+                             self.zb_currentNavigationBarSnapView = nil;
+                         }];
+    }
 }
 
+/**
+ 判断是否可以进行过渡
+
+ @param view 导航栏截图
+ @return 是否可以进行过渡
+ */
 - (BOOL)zb_canTransitionView:(UIView *)view {
     return view && !view.isHidden && view.alpha > 0;
 }

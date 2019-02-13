@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ZbNavigationBarKit'
-  s.version          = '0.0.5'
+  s.version          = '0.0.6'
   s.summary          = '一个简易的导航栏'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+  一个简易的导航栏
                        DESC
 
   s.homepage         = 'https://github.com/ToLengSon/ZbNavigationBarKit'
