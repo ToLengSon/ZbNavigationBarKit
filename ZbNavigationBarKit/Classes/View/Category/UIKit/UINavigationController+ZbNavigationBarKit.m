@@ -201,7 +201,7 @@
                                  percentComplete:(CGFloat)percentComplete
                                         duration:(CGFloat)duration  {
     
-    [UIView animateWithDuration:(1 - percentComplete) * duration
+    [UIView animateWithDuration:(isCancel ? percentComplete : (1 - percentComplete)) * duration
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
