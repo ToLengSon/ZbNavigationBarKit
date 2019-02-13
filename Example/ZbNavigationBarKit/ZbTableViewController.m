@@ -33,9 +33,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    return;
-    
 //    [[[[self.navigationController.interactivePopGestureRecognizer valueForKeyPath:@"targets"] firstObject] valueForKeyPath:@"target"] valueForKeyPath:@"_averageVelocity"]
     
 //    self.zb_navigationBar.alpha = 0.5;

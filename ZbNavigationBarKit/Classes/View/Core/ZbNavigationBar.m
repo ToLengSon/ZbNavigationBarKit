@@ -425,8 +425,6 @@ static NSDictionary *_sTitleAttributes;
 + (void)load {
     method_exchangeImplementations(class_getInstanceMethod(self, @selector(willMoveToParentViewController:)),
                                    class_getInstanceMethod(self, @selector(zb_willMoveToParentViewController:)));
-    method_exchangeImplementations(class_getInstanceMethod(self, @selector(didMoveToParentViewController:)),
-                                   class_getInstanceMethod(self, @selector(zb_didMoveToParentViewController:)));
 }
 
 - (void)zb_willMoveToParentViewController:(UINavigationController *)parent {
@@ -440,10 +438,6 @@ static NSDictionary *_sTitleAttributes;
         navigationBar.currentViewController = parent.topViewController;
         [navigationBar addBackButton];
     }
-}
-
-- (void)zb_didMoveToParentViewController:(UIViewController *)parent {
-    [self zb_didMoveToParentViewController:parent];
 }
 
 - (ZbNavigationBar *)zb_navigationBar {
